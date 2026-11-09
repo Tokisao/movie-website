@@ -98,6 +98,10 @@ img {
     color: var(--primary-color);
 }
 
+#search-bar {
+    width: calc(150px + 25%);
+}
+
 .main-nav ul {
     list-style: none;
     display: flex;
