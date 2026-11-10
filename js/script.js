@@ -54,6 +54,7 @@ $.get(filename, function(data) {
             }
         }
     });
+    $("#search-bar").after('<p class="dropdown rounded" style="background-color: rgba(2, 18, 61, 0.5); position: absolute;"></p>');
     
     let count = {};
     let matches = [];
@@ -70,19 +71,31 @@ $.get(filename, function(data) {
             matches.sort((a, b) => b.match - a.match);
             console.clear();
             console.log(matches);
+            
+            if (matches[0].match == 0) {
+                $(".dropdown").css("display", "none");
+            } else {
+                $(".dropdown").css("display", "block");
+            }
+            $(".dropdown").text(movies[matches[0].id].name);
+            
+            $('.dropdown').css({
+                position: 'absolute',
+                top: $('#search-bar').offset().top + $('#search-bar').outerHeight(),
+                left: $('#search-bar').offset().left,
+                width: $('#search-bar').outerWidth(),
+                height: $('#search-bar').outerHeight()
+            });
         });
     });
 });
 
-
-
 $("#search-bar").on("focus", function() {
     $("#search-bar").css("background", "rgba(2, 18, 61, 0.5)");
-    $(".header-inner").after("<p>Dropdown here!</p>");
 });
 $("#search-bar").on("blur", function() {
     $("#search-bar").css("background", "rgba(255, 206, 227, 0.15)");
-    $(".site-header").children().eq(1).remove();
+    $(".dropdown").css("display", "none");
 });
 
 // Filter
