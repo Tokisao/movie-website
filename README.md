@@ -39,6 +39,35 @@
 * **Responsive Design:**
   * Custom media queries for two distinct breakpoints (Tablet: `768px` and Mobile: `488px`).
   * Bootstrap Grid integration (`container`, `row`, `col-md-*`, `col-lg-*`) ensuring responsive layout shifts.
+
+* **Form validation (register, contact, review forms):**
+  * Required fields, email format checked with RegEx, and password
+    confirmation matching.
+  * A live password-strength meter (weak / medium / strong) based on
+    length, mixed case, digits and symbols.
+  * Instant feedback with error messages, valid/invalid highlighting and
+    Bootstrap alerts — the form won't submit until everything is correct.
+
+* **Dynamic search & filter:**
+  * Real-time search over the movie catalogue — results update on every
+    keystroke, no reload.
+  * Trigram-based ranking, plus a smart rating filter (e.g. `sci 8.5`
+    shows Sci-Fi movies rated 8.5+).
+  * Genre dropdown that works together with the search bar.
+  * Movie data is loaded from `/res/movies.txt` via `$.get`.
+
+* **Dynamic table with CRUD (`reviews.html`):**
+  * Movies are listed in a table and can be added, edited and deleted
+    through modal dialogs.
+  * Deleting asks for confirmation first.
+  * Changes are saved in `localStorage`, so records survive a page reload.
+  * A quick filter-by-title input and Esc/Enter keyboard shortcuts.
+
+* **Image gallery lightbox:**
+  * Clicking a movie poster opens it in a full-size lightbox.
+  * Prev/Next arrows, image counter, keyboard navigation and
+    click-outside to close.
+  * Smooth fade-in/fade-out animations with jQuery.
 ---
 ## 5. Technologies Used
 * **HTML5:** Semantic markup, tables, forms, and validation.
@@ -49,10 +78,10 @@
 ---
 ## 6. Individual Contribution of Member
 * **Dayana Z.:**
-  Was responsible for the movies, trailers, and contacts pages. The site's CSS styles were created by both team members.
+  Was responsible for the movies, trailers, and contacts pages. The site's CSS styles were created by both team members. In jQuery, built the **CRUD table** (create/edit/delete via modals, saved in `localStorage`) and the **image gallery lightbox** with prev/next navigation and smooth fade transitions
 
 * **Medina A.:**
-  Created the "main" and "reviews" pages and a curated list of resources. The site's CSS styles were created by both team members.
+  Created the "main" and "reviews" pages and a curated list of resources. The site's CSS styles were created by both team members. Handled **client-side form validation** — required fields, email RegEx, password matching, a live password-strength meter and real-time error feedback.
 
 * **Mukhammedali B.:**
   Added dynamic search bar with genre filter and moved all movies to `.txt` to load from there.
