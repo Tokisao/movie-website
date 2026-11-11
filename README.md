@@ -6,6 +6,7 @@
 ## 2. Group Member Names
 * **Dayana Zharylgapova** 
 * **Medina Alish** 
+* **Mukhammedali Bolegen**
 ---
 ## 3. Description of the Project
 **CineScope** is a multi-page, fully responsive website for movie enthusiasts. It is packed with features for rating and selecting films, featuring a user-friendly, intuitive design that adapts to all devices.
@@ -22,6 +23,7 @@
   * Fixed/sticky header with backdrop blur effect for effortless navigation.
   * Active navigation link indicators corresponding to the current page.
   * Responsive burger menu toggle for small screens.
+  * A search bar
 
 * **Semantic HTML5 Architecture:**
   * Clean layout structure utilizing semantic elements (`<header>`, `<nav>`, `<main>`, `<section>`, `<article>`, `<footer>`, `<time>`).
@@ -41,16 +43,19 @@
 ## 5. Technologies Used
 * **HTML5:** Semantic markup, tables, forms, and validation.
 * **CSS3:** Custom styles, CSS Grid, Flexbox, `:root` CSS variables, transitions, and media queries (`style.css`).
+* **jQuery:** Selectors, event listeners, file read.
 * **Bootstrap (v5.3.3):** Container grids, responsive utility classes, and table wrappers.
 * **Google Fonts:** `Poppins` font family for typography.
 ---
 ## 6. Individual Contribution of Member
 * **Dayana Z.:**
-  *Was responsible for the movies, trailers, and contacts pages. The site's CSS styles were created by both team members.
+  Was responsible for the movies, trailers, and contacts pages. The site's CSS styles were created by both team members.
 
 * **Medina A.:**
-  *Created the "main" and "reviews" pages and a curated list of resources. The site's CSS styles were created by both team members.
+  Created the "main" and "reviews" pages and a curated list of resources. The site's CSS styles were created by both team members.
 
+* **Mukhammedali B.:**
+  Added dynamic search bar and moved all movies to `.txt` to load from there.
 ---
 ## 7. Link to the Published Website
 * **Live Website:** [https://tokisao.github.io/movie-website/index.html](https://tokisao.github.io/movie-website/index.html)
