@@ -23,6 +23,7 @@
                         <li><a href="trailers.html">Trailers</a></li>
                         <li><a href="reviews.html" class="active">Reviews</a></li>
                         <li><a href="contact.html">Contact</a></li>
+                        <li><a href="register.html">Register</a></li>
                     </ul>
                 </nav>
             </div>
@@ -33,119 +34,32 @@
                 <p>See what other viewers think about the latest films — and share your own opinion. Ratings are based on a 1&ndash;10 scale.</p>
             </section>
             <section class="top-rated container my-5">
-                <h2>Top Rated Movies</h2>
-                <div class="table-responsive">
-                    <table class="ratings-table">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Movie</th>
-                                <th>Genre</th>
-                                <th>Year</th>
-                                <th>Rating</th>
-                                <th>Reviews</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>Titanic</td>
-                                <td>Romance / Drama</td>
-                                <td>1997</td>
-                                <td><span class="star">★</span> 9.2</td>
-                                <td>3,410</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>Avengers: Endgame</td>
-                                <td>Action / Sci-Fi</td>
-                                <td>2019</td>
-                                <td><span class="star">★</span> 9.0</td>
-                                <td>4,127</td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>Spider-Man: No Way Home</td>
-                                <td>Action / Adventure</td>
-                                <td>2021</td>
-                                <td><span class="star">★</span> 8.8</td>
-                                <td>3,860</td>
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td>Harry Potter and the Sorcerer's Stone</td>
-                                <td>Fantasy / Family</td>
-                                <td>2001</td>
-                                <td><span class="star">★</span> 8.6</td>
-                                <td>2,954</td>
-                            </tr>
-                            <tr>
-                                <td>5</td>
-                                <td>La La Land</td>
-                                <td>Musical / Romance</td>
-                                <td>2016</td>
-                                <td><span class="star">★</span> 8.5</td>
-                                <td>2,113</td>
-                            </tr>
-                            <tr>
-                                <td>6</td>
-                                <td>Coco</td>
-                                <td>Animation / Family</td>
-                                <td>2017</td>
-                                <td><span class="star">★</span> 8.7</td>
-                                <td>2,402</td>
-                            </tr>
-                            <tr>
-                                <td>7</td>
-                                <td>Coraline</td>
-                                <td>Animation / Fantasy</td>
-                                <td>2009</td>
-                                <td><span class="star">★</span> 8.0</td>
-                                <td>1,538</td>
-                            </tr>
-                            <tr>
-                                <td>8</td>
-                                <td>The Maze Runner</td>
-                                <td>Sci-Fi / Adventure</td>
-                                <td>2014</td>
-                                <td><span class="star">★</span> 7.4</td>
-                                <td>1,290</td>
-                            </tr>
-                            <tr>
-                                <td>9</td>
-                                <td>Legally Blonde</td>
-                                <td>Comedy / Romance</td>
-                                <td>2001</td>
-                                <td><span class="star">★</span> 7.6</td>
-                                <td>1,048</td>
-                            </tr>
-                            <tr>
-                                <td>10</td>
-                                <td>Home Alone</td>
-                                <td>Comedy / Family</td>
-                                <td>1990</td>
-                                <td><span class="star">★</span> 7.7</td>
-                                <td>1,867</td>
-                            </tr>
-                            <tr>
-                                <td>11</td>
-                                <td>The Fast and the Furious</td>
-                                <td>Action / Crime</td>
-                                <td>2001</td>
-                                <td><span class="star">★</span> 7.1</td>
-                                <td>1,342</td>
-                            </tr>
-                            <tr>
-                                <td>12</td>
-                                <td>Avatar: Fire and Ash</td>
-                                <td>Sci-Fi / Adventure</td>
-                                <td>2025</td>
-                                <td><span class="star">★</span> 8.3</td>
-                                <td>1,762</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <h2>Top Rated Movies</h2>
+            <div class="crud-toolbar">
+                <button id="btn-add-record" class="btn-submit">+ Add Movie</button>
+                <input type="text" id="crud-search" class="crud-search" placeholder="Filter by title…" />
+            </div>
+
+            <div id="crud-alert" class="alert d-none" role="alert"></div>
+            <div class="table-responsive">
+                <table class="ratings-table" id="crud-table">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Movie</th>
+                        <th>Genre</th>
+                        <th>Year</th>
+                        <th>Rating</th>
+                        <th>Reviews</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody id="crud-tbody">
+                        <!-- rows injected by JS -->
+                    </tbody>
+                </table>
+            </div>
+            <p class="crud-count" id="crud-count"></p>
             </section>
             <section class="user-reviews container my-5">
                 <h2>What Viewers Say</h2>
@@ -183,20 +97,23 @@
             <section class="write-review container my-5">
                 <h2>Write a Review</h2>
                 <p class="form-hint">All fields marked with <span class="required">*</span> are required.</p>
-                <form class="review-form" action="#" method="post">
+                <form class="review-form" action="#" method="post" novalidate>
                     <div class="form-row">
                         <div class="form-group">
                             <label for="name">Your name <span class="required">*</span></label>
                             <input type="text" id="name" name="name" placeholder="Jane Doe" required />
+                            <small class="field-error text-danger" data-for="name"></small>
                         </div>
                         <div class="form-group">
                             <label for="email">Email <span class="required">*</span></label>
                             <input type="email" id="email" name="email" placeholder="you@example.com" required />
+                            <small class="field-error text-danger" data-for="email"></small>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
                             <label for="movie">Movie <span class="required">*</span></label>
+                            <small class="field-error text-danger" data-for="movie"></small>
                             <select id="movie" name="movie" required>
                                 <option value="">— Select a movie —</option>
                                 <option value="la-la-land">La La Land</option>
@@ -215,6 +132,7 @@
                         </div>
                         <div class="form-group">
                             <label for="rating">Rating (1-10) <span class="required">*</span></label>
+                            <small class="field-error text-danger" data-for="rating"></small>
                             <select id="rating" name="rating" required>
                                 <option value="">— Choose —</option>
                                 <option value="10">10</option>
@@ -233,6 +151,7 @@
                     <div class="form-group">
                         <label for="review">Your review <span class="required">*</span></label>
                         <textarea id="review" name="review" rows="5" placeholder="Share your thoughts about this film..." required></textarea>
+                        <small class="field-error text-danger" data-for="review"></small>
                     </div>
                     <div class="form-group checkbox-group">
                         <input type="checkbox" id="spoilers" name="spoilers" />
@@ -241,6 +160,57 @@
                     <button type="submit" class="btn-submit">Submit Review</button>
                 </form>
             </section>
+        <!--modal: add/edit-->
+        <div class="modal-overlay" id="record-modal" aria-hidden="true">
+            <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+                <h2 id="modal-title">Add Movie</h2>
+                <form id="record-form" novalidate>
+                    <input type="hidden" id="record-id" />
+                    <div class="form-group">
+                        <label for="record-title">Title <span class="required">*</span></label>
+                        <input type="text" id="record-title" placeholder="Movie title" />
+                        <small class="field-error text-danger" data-for="record-title"></small>
+                    </div>
+                    <div class="form-group">
+                        <label for="record-genre">Genre <span class="required">*</span></label>
+                        <input type="text" id="record-genre" placeholder="Action / Sci-Fi" />
+                        <small class="field-error text-danger" data-for="record-genre"></small>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="record-year">Year <span class="required">*</span></label>
+                            <input type="number" id="record-year" min="1888" max="2100" placeholder="2024" />
+                            <small class="field-error text-danger" data-for="record-year"></small>
+                        </div>
+                        <div class="form-group">
+                            <label for="record-rating">Rating (1–10) <span class="required">*</span></label>
+                            <input type="number" id="record-rating" min="1" max="10" step="0.1" placeholder="8.5" />
+                            <small class="field-error text-danger" data-for="record-rating"></small>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="record-reviews">Reviews Count <span class="required">*</span></label>
+                        <input type="number" id="record-reviews" min="0" step="1" placeholder="1342" />
+                        <small class="field-error text-danger" data-for="record-reviews"></small>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn-secondary" id="modal-cancel">Cancel</button>
+                        <button type="submit" class="btn-submit" id="modal-save">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!--modal: delete-->
+        <div class="modal-overlay" id="confirm-modal" aria-hidden="true">
+            <div class="modal-box modal-box-sm" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+                <h2 id="confirm-title">Delete record?</h2>
+                <p id="confirm-text">This action cannot be undone.</p>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" id="confirm-cancel">Cancel</button>
+                    <button type="button" class="btn-danger" id="confirm-ok">Delete</button>
+                </div>
+            </div>
+        </div>
         </main>
         <footer class="site-footer">
             <div class="footer-inner">

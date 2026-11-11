@@ -23,6 +23,7 @@
                         <li><a href="trailers.html">Trailers</a></li>
                         <li><a href="reviews.html">Reviews</a></li>
                         <li><a href="contact.html" class="active">Contact</a></li>
+                        <li><a href="register.html">Register</a></li>
                     </ul>
                 </nav>
             </div>
@@ -56,24 +57,28 @@
                 <div class="write-review">
                     <h2 class="text-center">Send a Message</h2>
                     <p class="form-hint">All fields marked with <span class="required">*</span> are required.</p>
-                    <form class="review-form" action="#" method="post">
+                    <form id="contact-form" class="review-form" action="#" method="post" novalidate>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="contact-name">Your Name <span class="required">*</span></label>
                                 <input type="text" id="contact-name" name="name" placeholder="Jane Doe" required />
+                                <small class="field-error text-danger" data-for="contact-name"></small>
                             </div>
                             <div class="form-group">
                                 <label for="contact-email">Email Address <span class="required">*</span></label>
                                 <input type="email" id="contact-email" name="email" placeholder="you@example.com" required />
+                                <small class="field-error text-danger" data-for="contact-email"></small>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="contact-subject">Subject <span class="required">*</span></label>
                             <input type="text" id="contact-subject" name="subject" placeholder="General Inquiry" required />
+                             <small class="field-error text-danger" data-for="contact-subject"></small>
                         </div>
                         <div class="form-group">
                             <label for="contact-message">Message <span class="required">*</span></label>
                             <textarea id="contact-message" name="message" rows="5" placeholder="Write your message here..." required></textarea>
+                             <small class="field-error text-danger" data-for="contact-message"></small>
                         </div>
                         <button type="submit" class="btn-submit">Send Message</button>
                     </form>
