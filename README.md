@@ -9,7 +9,7 @@
 * **Mukhammedali Bolegen**
 ---
 ## 3. Description of the Project
-**CineScope** is a multi-page, fully responsive website for movie enthusiasts. It is packed with features for rating and selecting films, featuring a user-friendly, intuitive design that adapts to all devices.
+**CineScope** is a multi-page, fully responsive website for movie enthusiasts. It is packed with features for rating, selecting and browsing films, featuring a user-friendly, intuitive design that adapts to all devices.
 ---
 ## 4. Features Implemented
 * **Multi-Page Site Structure:**
@@ -18,12 +18,12 @@
   3. `trailers.html` (Trailers): Grid of video trailer cards with dynamic YouTube thumbnails linking directly to official trailers.
   4. `reviews.html` (Reviews & Ratings): Top-rated films presented in a custom table, real user review cards, and an interactive review submission form.
   5. `contact.html` (Contact Us): Contact channels (address, email, phone) and an inquiry form.
-
+  6. `register.html` (Register): User registration form with validation and password confirmation.
 * **Navigation & Header:**
   * Fixed/sticky header with backdrop blur effect for effortless navigation.
   * Active navigation link indicators corresponding to the current page.
   * Responsive burger menu toggle for small screens.
-  * A search bar
+  * A dynamic search bar with genre filters dropdown.
 
 * **Semantic HTML5 Architecture:**
   * Clean layout structure utilizing semantic elements (`<header>`, `<nav>`, `<main>`, `<section>`, `<article>`, `<footer>`, `<time>`).
@@ -55,7 +55,7 @@
   Created the "main" and "reviews" pages and a curated list of resources. The site's CSS styles were created by both team members.
 
 * **Mukhammedali B.:**
-  Added dynamic search bar and moved all movies to `.txt` to load from there.
+  Added dynamic search bar with genre filter and moved all movies to `.txt` to load from there.
 ---
 ## 7. Link to the Published Website
 * **Live Website:** [https://tokisao.github.io/movie-website/index.html](https://tokisao.github.io/movie-website/index.html)
