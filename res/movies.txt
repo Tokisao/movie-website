@@ -1,12 +1,12 @@
-Coco/coco.jpg/2017/8.7
-The Fast and the Furious/fast-and-furious.jpg/2001/7.1
-Harry Potter and the Sorcerer's Stone/harry-potter.jpg/2001/8.6
-Spider-Man: No Way Home/spider-man.jpg/2021/8.8
-Home Alone/home-alone.jpg/1990/7.7
-La La Land/la-la-land.jpg/2016/8.5
-Legally Blonde/legally-blonde.jpg/2001/7.6
-Avatar: Fire and Ash/avatar.jpg/2025/8.3
-Titanic/titanic.jpg/1997/9.2
-The Maze Runner/maze-runner.jpg/2014/7.4
-Avengers: Endgame/avengers.jpg/2019/9.0
-Coraline/coraline.jpg/2009/8.0
+Coco/coco.jpg/2017/8.7/Animation,Family
+The Fast and the Furious/fast-and-furious.jpg/2001/7.1/Action,Crime
+Harry Potter and the Sorcerer's Stone/harry-potter.jpg/2001/8.6/Fantasy,Family
+Spider-Man: No Way Home/spider-man.jpg/2021/8.8/Action,Adventure
+Home Alone/home-alone.jpg/1990/7.7/Comedy,Family
+La La Land/la-la-land.jpg/2016/8.5/Musical,Romance
+Legally Blonde/legally-blonde.jpg/2001/7.6/Comedy,Romance
+Avatar: Fire and Ash/avatar.jpg/2025/8.3/Sci-Fi,Adventure
+Titanic/titanic.jpg/1997/9.2/Romance,Drama
+The Maze Runner/maze-runner.jpg/2014/7.4/Sci-Fi,Adventure
+Avengers: Endgame/avengers.jpg/2019/9.0/Action,Sci-Fi
+Coraline/coraline.jpg/2009/8.0/Animation,Fantasy

@@ -208,15 +208,11 @@ function strProcess(str) {
     str = str.toLowerCase();
     let name = str;
     let ratingMin = 0.0;
-    if (str.split("/").length - 1 > 1) {
-        let filter = str.substring(str.indexOf("/") + 1, str.lastIndexOf("/"));
-        if (filter.indexOf(".") != -1) { // get float (minimum rating)
-            let index = filter.indexOf(".");
-            if (index > 0 && index + 1 < filter.length && /^\d$/.test(filter[index - 1]) && /^\d$/.test(filter[index + 1])) {
-                ratingMin = parseFloat(filter.substring(index - 1, index + 2));
-            }
+    if (name.indexOf(".") != -1) { // get float (minimum rating)
+        let index = name.indexOf(".");
+        if (index > 0 && index + 1 < name.length && /^\d$/.test(name[index - 1]) && /^\d$/.test(name[index + 1])) {
+            ratingMin = parseFloat(name.substring(index - 1, index + 2));
         }
-        name = name.substring(0, str.indexOf("/")) + name.substring(str.lastIndexOf("/") + 1);
     }
     name = name.replace(/[^a-zA-Z]/g, "");
     return {name, ratingMin};
@@ -244,15 +240,25 @@ function countCompare(c1, c2) {
 $.get(filename, function(data) {
     let lines = data.split(/\n/);
     lines.pop();
+    for (let i = 0; i < lines.length; i++) {
+        lines[i] = lines[i].slice(0, -1);
+    }
     
     const movies = [];
+    let genres = [];
     for (let line of lines) {
         let info = line.split("/");
         movies.push({ name: info[0],
                       cover: info[1],
                       year: info[2],
                       rating: info[3],
+                      genre: info[4].split(","),
                       counter: countTriplet(strProcess(info[0]).name)});
+        genres = genres.concat(info[4].split(","));
+    }
+    genres = new Set(genres);
+    for (let genre of genres) {
+        $(".genres").append('<option value="' + genre + '">' + genre + '</option>');
     }
     
     $(document).ready(function() {
@@ -267,22 +273,29 @@ $.get(filename, function(data) {
             }
         }
     });
-    let count = {};
-    let matches = [];
-    $(".search-bar").on("keyup", function() {
-        console.log("Cycle");
+    
+    let genre_filters = "All";
+    function update_search() {
+        console.log("search-input");
         $(".search-res").remove();
+        if ($(".search-bar").val() == "") {
+            return;
+        }
         let req = strProcess($(".search-bar").val());
-        console.log(req);
-        count = countTriplet(req.name);
-        matches = [];
+        let count = countTriplet(req.name);
+        let matches = [];
         
         for (let id = 0; id < movies.length; id++) {
             if (req.ratingMin <= movies[id].rating) {
-                let match = countCompare(count, movies[id].counter);
-                matches.push({id, match});
+                console.log(id, movies[id].genre);
+                if (genre_filters == "All" || movies[id].genre.includes(genre_filters)) {
+                    let match = countCompare(count, movies[id].counter);
+                    matches.push({id, match});
+                }
             }
         }
+        
+        console.log(movies);
         
         matches.sort((a, b) => b.match - a.match);
         console.log(matches);
@@ -309,7 +322,6 @@ $.get(filename, function(data) {
             +   movies[matches[i].id].name
             + '</h5>'
             );
-            
         }
         
         $('.search-res').css({
@@ -318,15 +330,30 @@ $.get(filename, function(data) {
             height: $('.search-bar').outerHeight() * 3
         });
         $(".search-res img").css("height", $('.search-res').outerHeight());
+    }
+    
+    $(".search-bar").keyup(update_search);
+    
+    $(".genres").on("input", function() {
+        genre_filters = $(".genres").val();
+        update_search();
     });
 });
 
 $(".search-bar").on("focus", function() {
-    $(".search-bar").css("background", "rgba(2, 18, 61, 0.5)");
+    $(".search-bar").css("background-color", "rgba(2, 18, 61, 0.5)");
 });
 $(".search-bar").on("blur", function() {
-    $(".search-bar").css("background", "rgba(255, 206, 227, 0.15)");
+    $(".search-bar").css("background-color", "rgba(255, 206, 227, 0.15)");
 });
+
+$(".genres").on("focus", function() {
+    $(".genres").css("background-color", "rgba(2, 18, 61, 0.5)");
+});
+$(".genres").on("blur", function() {
+    $(".genres").css("background-color", "rgba(255, 206, 227, 0.15)");
+});
+
 $(window).resize(function() {
     let results = $(".search-res");
     for (let i = 0; i < results.length; i++) {
