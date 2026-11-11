@@ -315,12 +315,15 @@ $.get(filename, function(data) {
             '<img '
             +   'src="images/' + movies[matches[i].id].cover + '" '
             +   'class="rounded">'
+            + '<p>'
+            + movies[matches[i].id].genre.join(" / ")
+            + '</p>'
             + '<p><span class="year">'
             + movies[matches[i].id].year + '</span> · <span class="star">★</span> '
             + movies[matches[i].id].rating + '</p>'
-            + '<h5>'
+            + '<h4>'
             +   movies[matches[i].id].name
-            + '</h5>'
+            + '</h4>'
             );
         }
         
