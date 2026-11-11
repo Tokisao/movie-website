@@ -295,7 +295,7 @@ $.get(filename, function(data) {
             $(".search-res").eq(i).css("top", $('.search-bar').offset().top + (3 * i + 1) * $('.search-bar').outerHeight());
             
             if (matches[i].match > 0) {
-                $(".search-res").eq(i).css("background", "rgba(2, 18, 100, 0.8)");
+                $(".search-res").eq(i).css("background-color", "rgba(2, 18, 100, 0.8)");
             }
             
             $(".search-res").eq(i).append(
