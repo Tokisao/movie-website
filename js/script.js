@@ -269,53 +269,55 @@ $.get(filename, function(data) {
     });
     let count = {};
     let matches = [];
-    $(".search-bar").on("focus", function() {
-        $(".search-bar").on("keyup", function() {
-            console.log("Cycle");
-            $(".search-res").remove();
-            let req = strProcess($(".search-bar").val());
-            console.log(req);
-            count = countTriplet(req.name);
-            matches = [];
+    $(".search-bar").on("keyup", function() {
+        console.log("Cycle");
+        $(".search-res").remove();
+        let req = strProcess($(".search-bar").val());
+        console.log(req);
+        count = countTriplet(req.name);
+        matches = [];
+        
+        for (let id = 0; id < movies.length; id++) {
+            if (req.ratingMin <= movies[id].rating) {
+                let match = countCompare(count, movies[id].counter);
+                matches.push({id, match});
+            }
+        }
+        
+        matches.sort((a, b) => b.match - a.match);
+        console.log(matches);
+        
+        for (let i = 0; i < Math.min(3, matches.length); i++) {
+            $(".search").append(
+            '<div '
+            +   'class="search-res rounded">'
+            + '</div>');
+            $(".search-res").eq(i).css("top", $('.search-bar').offset().top + (3 * i + 1) * $('.search-bar').outerHeight());
             
-            for (let id = 0; id < movies.length; id++) {
-                if (req.ratingMin <= movies[id].rating) {
-                    let match = countCompare(count, movies[id].counter);
-                    matches.push({id, match});
-                }
+            if (matches[i].match > 0) {
+                $(".search-res").eq(i).css("background", "rgba(2, 18, 100, 0.8)");
             }
             
-            matches.sort((a, b) => b.match - a.match);
-            console.log(matches);
+            $(".search-res").eq(i).append(
+            '<img '
+            +   'src="images/' + movies[matches[i].id].cover + '" '
+            +   'class="rounded">'
+            + '<p><span class="year">'
+            + movies[matches[i].id].year + '</span> · <span class="star">★</span> '
+            + movies[matches[i].id].rating + '</p>'
+            + '<h5>'
+            +   movies[matches[i].id].name
+            + '</h5>'
+            );
             
-            for (let i = 0; i < Math.min(3, matches.length); i++) {
-                $(".search").append(
-                '<div '
-                +   'class="search-res rounded">'
-                + '</div>');
-                $(".search-res").eq(i).css("top", $('.search-bar').offset().top + (3 * i + 1) * $('.search-bar').outerHeight());
-                
-                $(".search-res").eq(i).append(
-                '<img '
-                +   'src="images/' + movies[matches[i].id].cover + '" '
-                +   'class="rounded">'
-                + '<p><span class="year">'
-                + movies[matches[i].id].year + '</span> · <span class="star">★</span> '
-                + movies[matches[i].id].rating + '</p>'
-                + '<h5>'
-                +   movies[matches[i].id].name
-                + '</h5>'
-                );
-                
-            }
-            
-            $('.search-res').css({
-                left: $('.search-bar').offset().left,
-                width: $('.search-bar').outerWidth(),
-                height: $('.search-bar').outerHeight() * 3
-            });
-            $(".search-res img").css("height", $('.search-res').outerHeight());
+        }
+        
+        $('.search-res').css({
+            left: $('.search-bar').offset().left,
+            width: $('.search-bar').outerWidth(),
+            height: $('.search-bar').outerHeight() * 3
         });
+        $(".search-res img").css("height", $('.search-res').outerHeight());
     });
 });
 
