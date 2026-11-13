@@ -241,7 +241,9 @@ $.get(filename, function(data) {
     let lines = data.split(/\n/);
     lines.pop();
     for (let i = 0; i < lines.length; i++) {
-        lines[i] = lines[i].slice(0, -1);
+        if (lines[i].endsWith("\r") || lines[i].endsWith("\n")) {
+            lines[i] = lines[i].slice(0, -1);
+        }
     }
     
     const movies = [];
