@@ -119,7 +119,7 @@ img {
     position: absolute;
     display: grid;
     justify-content: center;
-    grid-template: repeat(3, minmax(0, 1fr)) / 1fr 1fr 1fr;
+    grid-template: 20% 50% 30% / 1fr 1fr 1fr;
     gap: 3px;
     border: 1px solid var(--border-color);
     grid-template-areas:
@@ -141,6 +141,11 @@ img {
     }
     p:first {
         grid-area: genre;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        margin: 0;
     }
     p:last-of-type {
         grid-area: desc;

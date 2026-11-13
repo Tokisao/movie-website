@@ -1,5 +1,5 @@
 // Ready / Variables
-let filename = "res/movies.txt";
+const API = `https://api.streamx.qzz.io`;
 
 // Login Form Validation
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -237,113 +237,118 @@ function countCompare(c1, c2) {
     return res;
 }
 
-$.get(filename, function(data) {
-    let lines = data.split(/\n/);
-    lines.pop();
-    for (let i = 0; i < lines.length; i++) {
-        if (lines[i].endsWith("\r") || lines[i].endsWith("\n")) {
-            lines[i] = lines[i].slice(0, -1);
-        }
+async function getMovies() {
+    const response = await fetch(`${API}/catalog/movie/top`);
+    
+    if (!response.ok) {
+        throw new Error(`API Error: ${response.status}`);
     }
     
-    const movies = [];
-    let genres = [];
-    for (let line of lines) {
-        let info = line.split("/");
-        movies.push({ name: info[0],
-                      cover: info[1],
-                      year: info[2],
-                      rating: info[3],
-                      genre: info[4].split(","),
-                      counter: countTriplet(strProcess(info[0]).name)});
-        genres = genres.concat(info[4].split(","));
-    }
-    genres = new Set(genres);
-    for (let genre of genres) {
-        $(".genres").append('<option value="' + genre + '">' + genre + '</option>');
-    }
+    const data = await response.json();
     
-    $(document).ready(function() {
-        if ($("title").text() == "CineScope — Movies") {
-            for (let movie of movies) {
-                $(".featured-grid").append('<div class="featured-card"><img src="images/'
-                + movie.cover + '" alt="Poster of '
-                + movie.name + '" loading="lazy" /><h3>'
-                + movie.name + '</h3><p><span class="year">'
-                + movie.year + '</span> · <span class="star">★</span> '
-                + movie.rating + '</p></div>');
+    return data.metas;
+}
+
+getMovies()
+    .then(movies => { // Movies validation
+        let verified = [];
+        $.each(movies, function(index, element) {
+            if (element.imdbRating != '') {
+                verified.push({
+                    name: element.name,
+                    year: element.year,
+                    rating: element.imdbRating,
+                    poster: element.poster,
+                    genre: element.genres,
+                    counter: countTriplet(strProcess(element.name).name)
+                });
             }
-        }
-    });
-    
-    let genre_filters = "All";
-    function update_search() {
-        console.log("search-input");
-        $(".search-res").remove();
-        if ($(".search-bar").val() == "") {
-            return;
-        }
-        let req = strProcess($(".search-bar").val());
-        let count = countTriplet(req.name);
-        let matches = [];
+        });
+        return verified;
+    })
+    .then(movies => {
+        let genres = [];
+        $.each(movies, function(index, element) {
+            genres = genres.concat(element.genre);
+        });
         
-        for (let id = 0; id < movies.length; id++) {
-            if (req.ratingMin <= movies[id].rating) {
-                console.log(id, movies[id].genre);
-                if (genre_filters == "All" || movies[id].genre.includes(genre_filters)) {
-                    let match = countCompare(count, movies[id].counter);
-                    matches.push({id, match});
+        genres = new Set(genres); // Removes duplicates
+        genres = Array.from(genres);
+        for (let genre of genres) {
+            $(".genres").append('<option value="' + genre + '">' + genre + '</option>');
+        }
+        
+        $(document).ready(function() {
+            if ($("title").text() == "CineScope — Movies") {
+                $.each(movies, function(index, element) {
+                    $(".featured-grid").append(`
+                    <div class="featured-card">
+                        <img src="${element.poster}" alt="Poster of ${element.name}" loading="lazy">
+                        <h3>${element.name}</h3>
+                        <p><span class="year">${element.year}</span> · <span class="star">★</span> ${element.rating}</p>
+                    </div>`);
+                });
+            }
+        });
+        
+        let genre_filters = "All";
+        function update_search() {
+            console.log("search-input");
+            $(".search-res").remove();
+            if ($(".search-bar").val() == "") {
+                return;
+            }
+            let req = strProcess($(".search-bar").val());
+            let count = countTriplet(req.name);
+            let matches = [];
+            
+            for (let id = 0; id < movies.length; id++) {
+                if (req.ratingMin <= movies[id].rating) {
+                    if (genre_filters == "All" || movies[id].genre.includes(genre_filters)) {
+                        let match = countCompare(count, movies[id].counter);
+                        matches.push({id, match});
+                    }
                 }
             }
-        }
-        
-        console.log(movies);
-        
-        matches.sort((a, b) => b.match - a.match);
-        console.log(matches);
-        
-        for (let i = 0; i < Math.min(3, matches.length); i++) {
-            $(".search").append(
-            '<div '
-            +   'class="search-res rounded">'
-            + '</div>');
-            $(".search-res").eq(i).css("top", $('.search-bar').offset().top + (3 * i + 1) * $('.search-bar').outerHeight());
             
-            if (matches[i].match > 0) {
-                $(".search-res").eq(i).css("background-color", "rgba(2, 18, 100, 0.8)");
+            console.log(movies);
+            
+            matches.sort((a, b) => b.match - a.match);
+            console.log(matches);
+            
+            for (let i = 0; i < Math.min(3, matches.length); i++) {
+                $(".search").append(`
+                <div class="search-res rounded">
+                </div>`);
+                $(".search-res").eq(i).css("top", $('.search-bar').offset().top + (3 * i + 1) * $('.search-bar').outerHeight());
+                
+                if (matches[i].match > 0) {
+                    $(".search-res").eq(i).css("background-color", "rgba(2, 18, 100, 0.8)");
+                }
+                
+                console.log(movies[matches[i].id].poster);
+                $(".search-res").eq(i).append(`
+                <img src="${movies[matches[i].id].poster}" class="rounded">
+                <p>${movies[matches[i].id].genre.join(" / ")}</p>
+                <p><span class="year">${movies[matches[i].id].year}</span> · <span class="star">★</span> ${movies[matches[i].id].rating}</p>
+                <h4>${movies[matches[i].id].name}</h4>`);
             }
             
-            $(".search-res").eq(i).append(
-            '<img '
-            +   'src="images/' + movies[matches[i].id].cover + '" '
-            +   'class="rounded">'
-            + '<p>'
-            + movies[matches[i].id].genre.join(" / ")
-            + '</p>'
-            + '<p><span class="year">'
-            + movies[matches[i].id].year + '</span> · <span class="star">★</span> '
-            + movies[matches[i].id].rating + '</p>'
-            + '<h4>'
-            +   movies[matches[i].id].name
-            + '</h4>'
-            );
+            $('.search-res').css({
+                left: $('.search-bar').offset().left,
+                width: $('.search-bar').outerWidth(),
+                height: $('.search-bar').outerHeight() * 3
+            });
+            $(".search-res img").css("height", $('.search-res').outerHeight());
         }
         
-        $('.search-res').css({
-            left: $('.search-bar').offset().left,
-            width: $('.search-bar').outerWidth(),
-            height: $('.search-bar').outerHeight() * 3
+        $(".search-bar").keyup(update_search);
+        
+        $(".genres").on("input", function() {
+            genre_filters = $(".genres").val();
+            update_search();
         });
-        $(".search-res img").css("height", $('.search-res').outerHeight());
-    }
-    
-    $(".search-bar").keyup(update_search);
-    
-    $(".genres").on("input", function() {
-        genre_filters = $(".genres").val();
-        update_search();
-    });
-});
+    })
 
 $(".search-bar").on("focus", function() {
     $(".search-bar").css("background-color", "rgba(2, 18, 61, 0.5)");
