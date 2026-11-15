@@ -325,7 +325,6 @@ async function getMovies() {
     }
     
     const data = await response.json();
-    console.log(data.metas);
     return data.metas;
 }
 
@@ -425,17 +424,18 @@ async function searchBar() { // Runs only once, returning breaks searchbar later
     $.each(genres, function(index, element) {
         $(".genres").append(`<option value="${element}">${element}</option>`);
     });
-    
-    if ($("title").text() == "CineScope — Movies") { // Page with all movies
-        $.each(movies, function(index, element) {
-            $(".featured-grid").append(`
-            <div class="featured-card">
-                <img src="${element.poster}" alt="Poster of ${element.name}" loading="lazy">
-                <h3>${element.name}</h3>
-                <p><span class="year">${element.year}</span> · <span class="star">★</span> ${element.rating}</p>
-            </div>`);
-        });
-    }
+}
+
+async function listMovies() {
+    const movies = await verifiedMovies();
+    $.each(movies, function(index, element) {
+        $(".featured-grid").append(`
+        <div class="featured-card">
+            <img src="${element.poster}" alt="Poster of ${element.name}" loading="lazy">
+            <h3>${element.name}</h3>
+            <p><span class="year">${element.year}</span> · <span class="star">★</span> ${element.rating}</p>
+        </div>`);
+    });
 }
 
 $(".search-bar").keyup(async (e) => await update_search(await verifiedMovies()));
@@ -446,6 +446,10 @@ $(".genres").on("input", async function() {
 });
 
 searchBar(); // Deleting this disables search bar
+
+if ($("title").text() == "CineScope — Movies") { // Page with all movies
+    listMovies();
+}
 
 $(".search-bar").on("focus", function() {
     $(this).css("background-color", "rgba(2, 18, 61, 0.5)");
