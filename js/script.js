@@ -1,6 +1,86 @@
 // Ready / Variables
-const API = `https://api.streamx.qzz.io`;
-const blacklist = `res/movies_blacklist.txt`;
+// js/movies-data.js — единый источник фильмов
+const API = 'https://api.streamx.qzz.io';
+const blacklist = 'res/movies_blacklist.txt';
+
+let _moviesCache = null;
+let _moviesPromise = null;
+
+function slugify(str) {
+    return String(str).toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '');
+}
+function parseVotes(v) {
+    if (v == null || v === '') return 0;
+    if (typeof v === 'number') return v;
+    return Number(String(v).replace(/[^\d]/g, '')) || 0;
+}
+    
+function loadMovies() {
+    if (_moviesCache) return Promise.resolve(_moviesCache);
+    if (_moviesPromise) return _moviesPromise;
+
+    _moviesPromise = Promise.all([
+        fetch(`${API}/catalog/movie/top`).then(r => {
+            if (!r.ok) throw new Error('API ' + r.status);
+            return r.json();
+        }),
+        $.get(blacklist).catch(() => '')
+    ]).then(([data, blacklistRaw]) => {
+        const banned = (blacklistRaw || '')
+            .split('\n').map(s => s.trim()).filter(Boolean);
+
+    _moviesCache = (data.metas || [])
+    .filter(m => m.imdbRating && !banned.includes(m.name))
+    .map(m => {
+        const reviews = Number(
+                    m.popularities?.trakt ??
+                    m.popularities?.moviedb ??
+                    m.popularity ??
+                    0
+                ) || 0;
+
+        return {
+            name: m.name,
+            year: m.year,
+            rating: parseFloat(m.imdbRating),
+            votes: Math.round(reviews),  
+            poster: m.poster,
+            genre: m.genres || [],
+            key: slugify(m.name + '-' + m.year)
+        };
+    });
+        return _moviesCache;
+    }).catch(err => {
+        console.error('Could not download fimls:', err);
+        _moviesCache = [];
+        return [];
+    });
+
+    return _moviesPromise;
+}
+//Using API for movies in index
+$(function () {
+    const $featured = $('#featured-grid');
+    const $top = $('#top-list');
+    if ($featured.length === 0 && $top.length === 0) return;
+
+    loadMovies().then(movies => {
+        if (movies.length === 0) return;
+        const featured = [...movies].sort((a, b) => b.rating - a.rating).slice(0, 4);
+        $featured.html(featured.map(m => `
+            <article class="featured-card">
+                <img src="${m.poster}" alt="Poster of ${m.name}" loading="lazy" />
+                <h3>${m.name}</h3>
+                <p><span class="year">${m.year}</span> · <span class="star">★</span> ${m.rating.toFixed(1)}</p>
+            </article>
+        `).join(''));
+        const top3 = [...movies].sort((a, b) => b.rating - a.rating).slice(0, 3);
+        $top.html(top3.map(m => `<li>${m.name}</li>`).join(''));
+    });
+});
+
 // Login Form Validation
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
@@ -276,6 +356,7 @@ async function verifiedMovies() {
 }
 
 async function searchBar() {
+    if ($('.search-bar').length === 0) return; 
     const movies = await verifiedMovies();
     console.log("Movies", movies);
     
@@ -289,8 +370,6 @@ async function searchBar() {
     for (let genre of genres) {
         $(".genres").append('<option value="' + genre + '">' + genre + '</option>');
     }
-    
-    $(document).ready(function() {
         if ($("title").text() == "CineScope — Movies") {
             $.each(movies, function(index, element) {
                 $(".featured-grid").append(`
@@ -300,8 +379,7 @@ async function searchBar() {
                     <p><span class="year">${element.year}</span> · <span class="star">★</span> ${element.rating}</p>
                 </div>`);
             });
-        }
-    });
+    }
     
     let genre_filters = "All";
     function update_search() {
@@ -386,50 +464,54 @@ $(window).resize(function() {
     $(".search-res img").css("height", $('.search-res').outerHeight());
 });
 
-// Filter
+// Trailers page sync with API
+$(function () {
+    const $row = $('#trailers-row');
+    if ($row.length === 0) return;
+
+    Promise.all([loadMovies(), $.getJSON('res/trailers.json')]).then(([movies, trailerMap]) => {
+        const cards = movies
+            .filter(m => trailerMap[m.key])
+            .map(m => {
+                const vid = trailerMap[m.key];
+                return `
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <a class="trailer-card" href="https://www.youtube.com/watch?v=${vid}" target="_blank" rel="noopener">
+                        <img src="https://img.youtube.com/vi/${vid}/hqdefault.jpg" alt="${m.name} Trailer" loading="lazy" />
+                        <h3>${m.name}</h3>
+                        <p>Official Trailer · ${m.year}</p>
+                    </a>
+                </div>`;
+            }).join('');
+        $row.html(cards || '<p class="text-center">Trailers are not added yet</p>');
+    });
+});
 
 // Dynamic Table & CRUD
 $(function () {
     const $tbody = $('#crud-tbody');
-    if ($tbody.length === 0) return; // не на reviews.html
+    if ($tbody.length === 0) return;
 
-    const STORAGE_KEY = 'cinescope_ratings_v2';
-    const SEED = [
-    { title: 'Titanic',                                 genre: 'Romance / Drama',      year: 1997, rating: 9.2, reviews: 3410 },
-    { title: 'Avengers: Endgame',                       genre: 'Action / Sci-Fi',      year: 2019, rating: 9.0, reviews: 4127 },
-    { title: 'Spider-Man: No Way Home',                 genre: 'Action / Adventure',   year: 2021, rating: 8.8, reviews: 3860 },
-    { title: "Harry Potter and the Sorcerer's Stone",   genre: 'Fantasy / Family',     year: 2001, rating: 8.6, reviews: 2954 },
-    { title: 'La La Land',                              genre: 'Musical / Romance',    year: 2016, rating: 8.5, reviews: 2113 },
-    { title: 'Coco',                                    genre: 'Animation / Family',   year: 2017, rating: 8.7, reviews: 2402 },
-    { title: 'Coraline',                                genre: 'Animation / Fantasy',  year: 2009, rating: 8.0, reviews: 1538 },
-    { title: 'The Maze Runner',                         genre: 'Sci-Fi / Adventure',   year: 2014, rating: 7.4, reviews: 1290 },
-    { title: 'Legally Blonde',                          genre: 'Comedy / Romance',     year: 2001, rating: 7.6, reviews: 1048 },
-    { title: 'Home Alone',                              genre: 'Comedy / Family',      year: 1990, rating: 7.7, reviews: 1867 },
-    { title: 'The Fast and the Furious',                genre: 'Action / Crime',       year: 2001, rating: 7.1, reviews: 1342 },
-    { title: 'Avatar: Fire and Ash',                    genre: 'Sci-Fi / Adventure',   year: 2025, rating: 8.3, reviews: 1762 }
-    ];
+   const STORAGE_KEY = 'cinescope_ratings_v2';
 
-    function loadRecords() {
-        try {
-            const raw = localStorage.getItem(STORAGE_KEY);
-            if (!raw) {
-                const seeded = SEED.map((r, i) => ({ id: i + 1, ...r }));
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(seeded));
-                return seeded;
-            }
-            const parsed = JSON.parse(raw);
-            return Array.isArray(parsed) ? parsed : [];
-        } catch (e) {
-            const seeded = SEED.map((r, i) => ({ id: i + 1, ...r }));
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(seeded));
-            return seeded;
-        }
-    }
     function saveRecords(recs) { localStorage.setItem(STORAGE_KEY, JSON.stringify(recs)); }
     function nextId(recs) { return recs.reduce((m, r) => Math.max(m, Number(r.id) || 0), 0) + 1; }
 
-    let records = loadRecords();
+    let records = [];
     let filterText = '';
+
+    loadMovies().then(movies => {
+    records = movies.map((m, i) => ({
+        id: i + 1,
+        title: m.name,
+        genre: m.genre.join(' / '),
+        year: m.year,
+        rating: m.rating,
+        reviews: m.votes   
+    }));
+    saveRecords(records);
+    render();
+});
 
     function escapeHtml(str) {
         return String(str)
@@ -838,9 +920,6 @@ $(function () {
         const $item   = $btn.closest('.faq-item');
         const $answer = $item.find('.faq-answer');
         const isOpen  = $btn.attr('aria-expanded') === 'true';
-
-        // Optional: close other open items (accordion behavior)
-        // Remove the next 4 lines if you want multiple open at once
         $faq.find('.faq-question[aria-expanded="true"]')
             .not($btn)
             .attr('aria-expanded', 'false')
@@ -855,5 +934,21 @@ $(function () {
 
         $btn.attr('aria-expanded', String(!isOpen));
         $btn.find('.faq-indicator').text(isOpen ? '+' : '−');
+    });
+});
+// Populate movie select on reviews page
+$(function () {
+    const $movie = $('#movie');
+    if ($movie.length === 0) return;
+
+    loadMovies().then(movies => {
+        if (!movies.length) return;
+
+        const sorted = [...movies].sort((a, b) => a.name.localeCompare(b.name));
+        const options = sorted.map(m =>
+            `<option value="${m.name}">${m.name} (${m.year})</option>`
+        ).join('');
+
+        $movie.append(options);
     });
 });
