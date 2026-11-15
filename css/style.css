@@ -125,19 +125,19 @@ img {
     position: fixed;
     display: grid;
     justify-content: center;
-    grid-template: 20% 50% 30% / 1fr 1fr 1fr;
-    gap: 3px;
+    grid-template: 20% 50% 30% / auto 2fr;
+    gap: 8px;
     border: 1px solid var(--border-color);
     grid-template-areas:
-    "image title title"
-    "image genre genre"
-    "image desc desc";
+    "image title"
+    "image genre"
+    "image desc";
     img {
         grid-area: image;
         height: 120px;
         object-fit: cover;
     }
-    h4 {
+    h5 {
         grid-area: title;
         min-width: 0;
         overflow: hidden;

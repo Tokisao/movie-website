@@ -325,7 +325,7 @@ async function getMovies() {
     }
     
     const data = await response.json();
-    
+    console.log(data.metas);
     return data.metas;
 }
 
@@ -342,7 +342,7 @@ async function verifiedMovies() {
                     if (element.imdbRating != '' && $.inArray(element.name, banned) == -1) {
                         verified.push({
                             name: element.name,
-                            year: element.year,
+                            year: element.year.slice(0, 4), // In case 2022-
                             rating: element.imdbRating,
                             poster: element.poster,
                             genre: element.genres,
@@ -405,7 +405,7 @@ async function update_search(movies) {
         <img src="${movies[element.id].poster}" class="rounded">
         <p>${movies[element.id].genre.join(" / ")}</p>
         <p><span class="year">${movies[element.id].year}</span> · <span class="star">★</span> ${movies[element.id].rating}</p>
-        <h4>${movies[element.id].name}</h4>`);
+        <h5>${movies[element.id].name}</h5>`);
     });
     
     $('.search-res').css({
