@@ -338,13 +338,14 @@ async function verifiedMovies() {
                 
                 let verified = [];
                 $.each(movies, function(index, element) {
-                    if (element.imdbRating != '' && $.inArray(element.name, banned) == -1) {
+                    if (element.imdbRating != '' && $.inArray(element.name, banned) == -1 && Object.hasOwn(element, "trailers")) {
                         verified.push({
                             name: element.name,
                             year: element.year.slice(0, 4), // In case 2022-
                             rating: element.imdbRating,
                             poster: element.poster,
                             genre: element.genres,
+                            trailer: element.trailers[0].source,
                             counter: countTriplet(strProcess(element.name).name)
                         });
                     }
@@ -477,27 +478,25 @@ $(window).resize(function() {
 });
 
 // Trailers page sync with API
-$(function () {
-    const $row = $('#trailers-row');
-    if ($row.length === 0) return;
-
-    Promise.all([loadMovies(), $.getJSON('res/trailers.json')]).then(([movies, trailerMap]) => {
-        const cards = movies
-            .filter(m => trailerMap[m.key])
-            .map(m => {
-                const vid = trailerMap[m.key];
-                return `
-                <div class="col-md-6 col-lg-4 mb-4">
-                    <a class="trailer-card" href="https://www.youtube.com/watch?v=${vid}" target="_blank" rel="noopener">
-                        <img src="https://img.youtube.com/vi/${vid}/hqdefault.jpg" alt="${m.name} Trailer" loading="lazy" />
-                        <h3>${m.name}</h3>
-                        <p>Official Trailer · ${m.year}</p>
-                    </a>
-                </div>`;
-            }).join('');
-        $row.html(cards || '<p class="text-center">Trailers are not added yet</p>');
+async function listTrailers() {
+    
+    const movies = await verifiedMovies();
+    
+    $.each(movies, function(index, element) {
+        $('#trailers-row').append(`
+        <div class="col-md-6 col-lg-4 mb-4">
+            <a class="trailer-card" href="https://www.youtube.com/watch?v=${element.trailer}" target="_blank" rel="noopener">
+                <img src="https://img.youtube.com/vi/${element.trailer}/hqdefault.jpg" alt="${element.name} Trailer" loading="lazy">
+                <h3>${element.name}</h3>
+                <p>Official Trailer · ${element.year}</p>
+            </a>
+        </div>`);
     });
-});
+}
+
+if ($("title").text() == "CineScope — Movie Trailers") { // Page with all movies
+    listTrailers();
+}
 
 // Dynamic Table & CRUD
 $(function () {
