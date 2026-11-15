@@ -1248,3 +1248,33 @@ body.light-theme .lightbox {
     .faq-question { padding: 14px 16px; font-size: 0.95rem; }
     .faq-answer  { padding: 0 16px 14px; }
 }
+
+#profile-card {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 15px;
+    width: 220px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    text-align: left;
+}
+
+#profile-card.is-open {
+    display: block;
+}
+
+#profile-card p {
+    margin: 5px 0;
+    font-size: 0.9rem;
+    color: var(--text-light);
+}
+
+#profile-card span {
+    color: var(--primary-color);
+    word-break: break-all;
+}
