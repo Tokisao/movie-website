@@ -29,7 +29,16 @@
                             <li><a href="trailers.html">Trailers</a></li>
                             <li><a href="reviews.html">Reviews</a></li>
                             <li><a href="contact.html" class="active">Contact</a></li>
-                            <li><a href="register.html">Register</a></li>
+                            <li><a href="register.html" id="nav-register">Register</a></li>
+                            <li id="nav-user-dropdown" style="display: none; position: relative;">
+                            <a href="#" id="nav-user" style="font-weight: bold; color: var(--primary-color); cursor: pointer;"></a>
+                            <div id="profile-card" class="profile-card">
+                                <p><strong>Name:</strong> <span id="profile-name"></span></p>
+                                <p><strong>Email:</strong> <span id="profile-email"></span></p>
+                                <hr style="border-color: var(--border-color); margin: 10px 0;">
+                                <a href="#" id="logout-btn" style="color: #ff5c7c; font-weight: bold; display: block; text-align: center;">Logout</a>
+                            </div>
+                        </li>
                         </ul>
                     </nav>
                 </div>
