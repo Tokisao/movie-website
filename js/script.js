@@ -1,7 +1,6 @@
 // Ready / Variables
 const API = `https://api.streamx.qzz.io`;
 const blacklist = `res/movies_blacklist.txt`;
-
 // Login Form Validation
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
@@ -791,5 +790,70 @@ $(function () {
         if (e.key === 'Escape')     closeLightbox();
         if (e.key === 'ArrowLeft')  goTo(current - 1);
         if (e.key === 'ArrowRight') goTo(current + 1);
+    });
+});
+/* light/dark theme toggle*/
+(function () {
+    const THEME_KEY = 'cinescope_theme';
+    const $body     = $('body');
+    const $toggle   = $('#theme-toggle');
+    const $icon     = $toggle.find('.theme-icon');
+
+    function applyTheme(theme) {
+        if (theme === 'light') {
+            $body.addClass('light-theme');
+            $icon.text('☀️');
+            $toggle.attr('title', 'Switch to dark theme');
+        } else {
+            $body.removeClass('light-theme');
+            $icon.text('🌙');
+            $toggle.attr('title', 'Switch to light theme');
+        }
+    }
+
+    // Load saved theme on every page (runs immediately)
+    const saved = localStorage.getItem(THEME_KEY) || 'dark';
+    applyTheme(saved);
+
+    // Toggle on click
+    $toggle.on('click', function () {
+        const isLight = $body.hasClass('light-theme');
+        const next = isLight ? 'dark' : 'light';
+        applyTheme(next);
+        localStorage.setItem(THEME_KEY, next);
+
+        // Small feedback animation
+        $(this).stop(true, true).animate({ opacity: 0.4 }, 90)
+               .animate({ opacity: 1 }, 120);
+    });
+})();
+
+/* FAQ accordition*/
+$(function () {
+    const $faq = $('.faq-list');
+    if ($faq.length === 0) return;
+
+    $faq.on('click', '.faq-question', function () {
+        const $btn    = $(this);
+        const $item   = $btn.closest('.faq-item');
+        const $answer = $item.find('.faq-answer');
+        const isOpen  = $btn.attr('aria-expanded') === 'true';
+
+        // Optional: close other open items (accordion behavior)
+        // Remove the next 4 lines if you want multiple open at once
+        $faq.find('.faq-question[aria-expanded="true"]')
+            .not($btn)
+            .attr('aria-expanded', 'false')
+            .each(function () {
+                $(this).closest('.faq-item')
+                    .find('.faq-answer').slideUp(260);
+                $(this).find('.faq-indicator').text('+');
+            });
+
+        // Toggle clicked item with smooth slide animation
+        $answer.stop(true, true).slideToggle(260);
+
+        $btn.attr('aria-expanded', String(!isOpen));
+        $btn.find('.faq-indicator').text(isOpen ? '+' : '−');
     });
 });

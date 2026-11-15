@@ -14,18 +14,25 @@
         <header class="site-header">
             <div class="header-inner">
                 <a href="index.html" class="logo">Cine<span>Scope</span></a>
-                <input type="checkbox" id="burger-toggle" class="burger-toggle" />
-                <label for="burger-toggle" class="burger" aria-label="Toggle menu">☰</label>
-                <nav class="main-nav">
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="movies.html">Movies</a></li>
-                        <li><a href="trailers.html">Trailers</a></li>
-                        <li><a href="reviews.html">Reviews</a></li>
-                        <li><a href="contact.html" class="active">Contact</a></li>
-                        <li><a href="register.html">Register</a></li>
-                    </ul>
-                </nav>
+                <div class="header-right">
+                    <input type="checkbox" id="burger-toggle" class="burger-toggle" />
+                    <label for="burger-toggle" class="burger" aria-label="Toggle menu">☰</label>
+                    
+                    <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Toggle light/dark theme" title="Toggle theme">
+                        <span class="theme-icon">🌙</span>
+                    </button>
+                    
+                    <nav class="main-nav">
+                        <ul>
+                            <li><a href="index.html">Home</a></li>
+                            <li><a href="movies.html">Movies</a></li>
+                            <li><a href="trailers.html">Trailers</a></li>
+                            <li><a href="reviews.html">Reviews</a></li>
+                            <li><a href="contact.html" class="active">Contact</a></li>
+                            <li><a href="register.html">Register</a></li>
+                        </ul>
+                    </nav>
+                </div>
             </div>
         </header>
         <main class="reviews-main">
@@ -54,6 +61,66 @@
                         </div>
                     </div>
                 </div>
+                <section class="faq container my-5">
+                <h2 class="text-center">Frequently Asked Questions</h2>
+                <p class="form-hint">Click a question to reveal the answer.</p>
+                <div class="faq-list">
+                    <div class="faq-item">
+                        <button type="button" class="faq-question" aria-expanded="false">
+                            <span>Is CineScope free to use?</span>
+                            <span class="faq-indicator" aria-hidden="true">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Yes! Browsing movies, watching trailers, and reading reviews is completely free. You only need to register to post your own reviews and rate films.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button type="button" class="faq-question" aria-expanded="false">
+                            <span>How are the movie ratings calculated?</span>
+                            <span class="faq-indicator" aria-hidden="true">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>All ratings are on a 1–10 scale and come from real viewers. The Top Rated table aggregates these scores, and you can edit or delete entries from the Reviews page.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button type="button" class="faq-question" aria-expanded="false">
+                            <span>Can I submit a review without an account?</span>
+                            <span class="faq-indicator" aria-hidden="true">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>You can try the review form, but we recommend creating a free account first — your name and email will be auto-filled from your registration, and your reviews will be linked to your profile.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button type="button" class="faq-question" aria-expanded="false">
+                            <span>Where do the trailer videos come from?</span>
+                            <span class="faq-indicator" aria-hidden="true">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>All trailers are official videos hosted on YouTube. Clicking a trailer card opens the official trailer in a new tab — we never host or re-upload copyrighted content.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button type="button" class="faq-question" aria-expanded="false">
+                            <span>Why can't I find a movie using the search bar?</span>
+                            <span class="faq-indicator" aria-hidden="true">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Our smart search matches titles using trigram ranking and supports rating filters (e.g. <code>sci 8.5</code>). If a film is missing, it may not be in our catalog yet — let us know via the contact form!</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button type="button" class="faq-question" aria-expanded="false">
+                            <span>How do I change the site theme?</span>
+                            <span class="faq-indicator" aria-hidden="true">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Click the 🌙 / ☀️ button in the top-right header on any page. Your choice is saved in your browser (localStorage) and applied automatically the next time you visit.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
                 <div class="write-review">
                     <h2 class="text-center">Send a Message</h2>
                     <p class="form-hint">All fields marked with <span class="required">*</span> are required.</p>
