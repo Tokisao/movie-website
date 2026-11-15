@@ -106,7 +106,7 @@ img {
 
 .search {
     display: flex;
-    width: calc(120px + 20%);
+    width: calc(150px + 25%);
 }
 
 .search-bar {
@@ -122,22 +122,22 @@ img {
 
 .search-res {
     background-color: rgba(2, 18, 61, 0.8);
-    position: fixed;
+    position: absolute;
     display: grid;
     justify-content: center;
-    grid-template: 20% 50% 30% / auto 2fr;
-    gap: 8px;
+    grid-template: 20% 50% 30% / 1fr 1fr 1fr;
+    gap: 3px;
     border: 1px solid var(--border-color);
     grid-template-areas:
-    "image title"
-    "image genre"
-    "image desc";
+    "image title title"
+    "image genre genre"
+    "image desc desc";
     img {
         grid-area: image;
         height: 120px;
         object-fit: cover;
     }
-    h5 {
+    h4 {
         grid-area: title;
         min-width: 0;
         overflow: hidden;
@@ -1247,4 +1247,34 @@ body.light-theme .lightbox {
 @media (max-width: 480px) {
     .faq-question { padding: 14px 16px; font-size: 0.95rem; }
     .faq-answer  { padding: 0 16px 14px; }
+}
+
+#profile-card {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 15px;
+    width: 220px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    text-align: left;
+}
+
+#profile-card.is-open {
+    display: block;
+}
+
+#profile-card p {
+    margin: 5px 0;
+    font-size: 0.9rem;
+    color: var(--text-light);
+}
+
+#profile-card span {
+    color: var(--primary-color);
+    word-break: break-all;
 }

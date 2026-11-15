@@ -283,6 +283,59 @@ $(function () {
     });
 });
 
+//authentication
+$(function () {
+    const $navRegister = $('#nav-register');
+    const $navUserDropdown = $('#nav-user-dropdown');
+    const $navUser = $('#nav-user');
+    const $profileCard = $('#profile-card');
+    const $logoutBtn = $('#logout-btn');
+    
+    const userName = localStorage.getItem('userName');
+    const userEmail = localStorage.getItem('userEmail');
+
+    //check if user is already signed in
+    if (userName) {
+        $navRegister.hide();
+        $navUserDropdown.show();
+        
+        $navUser.text('👤 ' + userName + ' ▾');
+        $('#profile-name').text(userName);
+        $('#profile-email').text(userEmail || 'Not provided');
+        
+        $logoutBtn.show();
+        
+        if ($('title').text() === 'CineScope — Register') {
+            $('.page-intro h1').text('You are already registered!');
+            $('.page-intro p').text('Welcome back, ' + userName + '! You can now write reviews.');
+            $('.write-review').hide();
+        }
+    }
+
+    //open/close dropdown card
+    $navUser.on('click', function (e) {
+        e.preventDefault();
+        $profileCard.toggleClass('is-open');
+    });
+
+    //close dropdown if clicked outside
+    $(document).on('click', function (e) {
+        if (!$(e.target).closest('#nav-user-dropdown').length) {
+            $profileCard.removeClass('is-open');
+        }
+    });
+
+    //logout
+    $logoutBtn.on('click', function (e) {
+        e.preventDefault();
+        
+        localStorage.removeItem('userName');
+        localStorage.removeItem('userEmail');
+        
+        window.location.href = 'index.html';
+    });
+});
+
 // Dynamic Search
 function strProcess(str) {
     str = str.toLowerCase();
