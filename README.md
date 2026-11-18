@@ -9,7 +9,7 @@
 * **Mukhammedali Bolegen**
 ---
 ## 3. AI Usage Disclosure
-We used AI (DeepSeek and ChatGPT) to help us build this project. We used it to generate some of the HTML, CSS and JavaScript code and to fix bugs. We also used it to suggest layout ideas. We tested everything ourselves, but we want to be honest that AI was used in this project for assistance.
+We used AI (DeepSeek and ChatGPT) to help us build this project. We used it to review some of the HTML, CSS and JavaScript code and to fix bugs. We also used it to suggest layout ideas. We tested everything ourselves, but we want to be honest that AI was used in this project for assistance.
 
 We also added a note about AI usage in the footer of every page on the website.
 ---
